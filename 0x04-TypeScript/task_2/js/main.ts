@@ -11,7 +11,7 @@ interface TeacherInterface {
   workTeacherTasks(): string;
 }
 
-// Director Class
+// Classes
 class Director implements DirectorInterface {
   workFromHome(): string {
     return 'Working from home';
@@ -26,7 +26,6 @@ class Director implements DirectorInterface {
   }
 }
 
-// Teacher Class
 class Teacher implements TeacherInterface {
   workFromHome(): string {
     return 'Cannot work from home';
@@ -41,7 +40,7 @@ class Teacher implements TeacherInterface {
   }
 }
 
-// createEmployee Function
+// Factory function
 function createEmployee(salary: number | string): Director | Teacher {
   if (typeof salary === 'number' && salary < 500) {
     return new Teacher();
@@ -49,7 +48,35 @@ function createEmployee(salary: number | string): Director | Teacher {
   return new Director();
 }
 
-// Testing
-console.log(createEmployee(200));    // Teacher
-console.log(createEmployee(1000));   // Director
-console.log(createEmployee('$500')); // Director
+// Step 6 - Function to check if employee is a Director
+function isDirector(employee: Director | Teacher): employee is Director {
+  return employee instanceof Director;
+}
+
+// Step 6 - Function to execute work based on role
+function executeWork(employee: Director | Teacher): string {
+  if (isDirector(employee)) {
+    return employee.workDirectorTasks();
+  } else {
+    return employee.workTeacherTasks();
+  }
+}
+
+// Testing expected output
+console.log(executeWork(createEmployee(200)));    // Getting to work
+console.log(executeWork(createEmployee(1000)));   // Getting to director tasks
+
+// Step 7 - Define string literal type
+type Subjects = 'Math' | 'History';
+
+// Function to return what is being taught
+function teachClass(todayClass: Subjects): string {
+  if (todayClass === 'Math') {
+    return 'Teaching Math';
+  }
+  return 'Teaching History';
+}
+
+// Testing expected output
+console.log(teachClass('Math'));     // Teaching Math
+console.log(teachClass('History'));  // Teaching History
